@@ -49,7 +49,7 @@ def get_base64_of_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-logo_base64 = get_base64_of_image("logo.png")  # Cambia "logo.png" por la ruta de tu logo
+logo_base64 = get_base64_of_image("cvcc.png")  # Cambia "logo.png" por la ruta de tu logo
 st.markdown(
     f'<img src="data:image/png;base64,{logo_base64}" width="150">',
     unsafe_allow_html=True,
