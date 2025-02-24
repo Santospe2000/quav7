@@ -1,15 +1,7 @@
-pandas
-numpy
-openai
 streamlit
-scikit-learn
-python-dotenv
-sodapy
- hubspot-api-client
-SpeechRecognition
+speechrecognition
+hubspot-api-client
 requests
--qU langchain-google-vertexai
-google-cloud
-langchain-google-vertexai
--qU langchain-google-genai
+langchain-google-genai
 matplotlib
+google-cloud-speech
