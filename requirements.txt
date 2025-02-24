@@ -1,0 +1,15 @@
+pandas
+numpy
+openai
+streamlit
+scikit-learn
+python-dotenv
+sodapy
+ hubspot-api-client
+SpeechRecognition
+requests
+-qU langchain-google-vertexai
+google-cloud
+langchain-google-vertexai
+-qU langchain-google-genai
+matplotlib
