@@ -22,20 +22,20 @@ st.markdown(
     .stApp {
         background-color: #f0f2f6;
         padding: 20px;
-        border: 2px solid #1f77b4;  /* Borde azul oscuro */
+        border: 2px solid #1f77b4;
         border-radius: 10px;
     }
     .stButton>button {
-        background-color: #1f77b4;  /* Azul oscuro */
+        background-color: #1f77b4;
         color: white;
         border-radius: 5px;
         padding: 10px 20px;
     }
     .stButton>button:hover {
-        background-color: #165a8a;  /* Azul más oscuro */
+        background-color: #165a8a;
     }
     .stHeader {
-        color: #1f77b4;  /* Azul oscuro */
+        color: #1f77b4;
     }
     .stDataFrame {
         background-color: white;
@@ -63,7 +63,7 @@ def get_base64_of_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-logo_base64 = get_base64_of_image("cvcc.png")  # Cambia "logo.png" por la ruta de tu logo
+logo_base64 = get_base64_of_image("cvcc.png")
 st.markdown(
     f'<img src="data:image/png;base64,{logo_base64}" width="150">',
     unsafe_allow_html=True,
@@ -177,32 +177,25 @@ Para cada paso, indica si se cumplió (✅) o no (❌) y proporciona una explica
 
 # Función para generar el gráfico de barras con totalización
 def generar_grafico_barras_con_totalizacion(df_resultados):
-    # Clasificar las llamadas según su nota
     llamadas_rojas = df_resultados[(df_resultados['Rating'] >= 0) & (df_resultados['Rating'] <= 2)].shape[0]
     llamadas_amarillas = df_resultados[(df_resultados['Rating'] > 2) & (df_resultados['Rating'] <= 4)].shape[0]
     llamadas_verdes = df_resultados[(df_resultados['Rating'] >= 4.8) & (df_resultados['Rating'] <= 5)].shape[0]
 
-    # Crear el gráfico de barras
     fig, ax = plt.subplots(figsize=(10, 6))
     barras = ax.bar(['1', '2', '3', '4', '5'], [llamadas_rojas, llamadas_amarillas, llamadas_verdes, 0, 0], 
                     color=['red', 'yellow', 'green', 'blue', 'blue'])
 
-    # Añadir el total de llamadas al final de cada barra
     for barra in barras:
         height = barra.get_height()
         ax.text(barra.get_x() + barra.get_width() / 2., height,
                 f'{int(height)}', ha='center', va='bottom')
 
-    # Configuraciones adicionales del gráfico
     ax.set_xlabel('Rango de Notas')
     ax.set_ylabel('Cantidad de Llamadas')
     ax.set_title('Distribución de Llamadas por Rango de Notas')
     ax.grid(True)
 
-    # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
-
-    # Calcular y mostrar el promedio total de las notas
     promedio_total = df_resultados['Rating'].mean()
     st.write(f"Promedio Total de Notas: {promedio_total:.2f}")
 
@@ -212,21 +205,17 @@ def generar_informe_pdf(resultados, promedio_calificaciones):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
-    # Título del informe
     pdf.cell(200, 10, txt="Informe de Análisis de Llamadas", ln=True, align="C")
     pdf.ln(10)
 
-    # Promedio de calificaciones
     pdf.cell(200, 10, txt=f"Promedio de Calificaciones: {promedio_calificaciones:.2f}/5.0", ln=True)
     pdf.ln(10)
 
-    # Detalles de cada llamada
     for resultado in resultados:
         pdf.cell(200, 10, txt=f"Llamada ID: {resultado['Call ID']}", ln=True)
         pdf.multi_cell(0, 10, txt=resultado["Analysis"].encode("latin1", "replace").decode("latin1"))
         pdf.ln(5)
 
-    # Guardar el PDF
     pdf_path = "informe_llamadas.pdf"
     pdf.output(pdf_path)
     return pdf_path
@@ -235,14 +224,14 @@ def generar_informe_pdf(resultados, promedio_calificaciones):
 def main():
     st.sidebar.title("Configuración")
 
-    # Claves de API automáticas (puedes cambiarlas por tus claves reales)
-    hubspot_token = "pat-na1-90fb70db-bee9-43e2-9638-9558e06d09f5"  # Clave de HubSpot
-    google_api_key = "AIzaSyC5WxvYNaLDGlxGqpq2dXZ80cbaSPp1ntE"  # Clave de Google
+    # Claves de API
+    hubspot_token = "pat-na1-90fb70db-bee9-43e2-9638-9558e06d09f5"
+    google_api_key = "AIzaSyC5WxvYNaLDGlxGqpq2dXZ80cbaSPp1ntE"
 
     os.environ["HUBSPOT_ACCESS_TOKEN"] = hubspot_token
     os.environ["GOOGLE_API_KEY"] = google_api_key
 
-    # Selección de fechas con un calendario
+    # Selección de fechas
     st.sidebar.write("Selecciona el rango de fechas:")
     col1, col2 = st.sidebar.columns(2)
     with col1:
@@ -271,7 +260,6 @@ def main():
             api_response = client.crm.objects.search_api.do_search("calls", search_request)
             results = api_response.results
 
-            # Mostrar resultados
             call_ids = [result.id for result in results]
             recording_urls = [result.properties.get("hs_call_recording_url") for result in results]
             valid_calls = [{"Call ID": call_id, "Recording URL": url} for call_id, url in zip(call_ids, recording_urls) if url]
@@ -281,7 +269,6 @@ def main():
                 st.write("Llamadas encontradas:")
                 st.dataframe(df)
 
-                # Seleccionar llamadas para analizar
                 selected_call_ids = st.multiselect("Selecciona las llamadas para analizar:", df["Call ID"].tolist())
 
                 if selected_call_ids:
@@ -304,7 +291,6 @@ def main():
                             st.write(resultado["Analysis"])
                             st.write("-" * 80)
 
-                        # Calcular el promedio de calificaciones
                         def extract_rating(analysis):
                             lines = analysis.split('\n')
                             for line in lines:
@@ -315,10 +301,8 @@ def main():
                         df_resultados = pd.DataFrame(resultados)
                         df_resultados['Rating'] = df_resultados['Analysis'].apply(extract_rating)
 
-                        # Mostrar el gráfico de barras con totalización
                         generar_grafico_barras_con_totalizacion(df_resultados)
 
-                        # Generar y descargar el informe en PDF
                         informe_pdf = generar_informe_pdf(resultados, df_resultados['Rating'].mean())
                         with open(informe_pdf, "rb") as file:
                             st.download_button(
@@ -328,10 +312,16 @@ def main():
                                 mime="application/pdf"
                             )
 
-                        # Botones finales
                         col1, col2 = st.columns(2)
                         with col1:
                             if st.button("Nueva Búsqueda"):
                                 st.experimental_rerun()
                         with col2:
-                            if st.button("Cerr
+                            if st.button("Cerrar"):
+                                st.stop()
+
+        except ApiException as e:
+            st.error(f"Error al consultar HubSpot: {e}")
+
+if __name__ == "__main__":
+    main()
