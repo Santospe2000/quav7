@@ -225,7 +225,7 @@ def main():
     st.sidebar.title("Configuración")
 
     # Claves de API
-    hubspot_token = "pat-na1-90fb70db-bee9-43e2-9638-9558e06d09f5"
+    hubspot_token = "pat-na1-9e549341-c29d-4d3d-8257-2facd2a463c6"
     google_api_key = "AIzaSyC5WxvYNaLDGlxGqpq2dXZ80cbaSPp1ntE"
 
     os.environ["HUBSPOT_ACCESS_TOKEN"] = hubspot_token
